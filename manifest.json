@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-ctrl-scroll-zoom",
-	"name": "Ctrl+Scroll Zoom",
-	"version": "1.0.2",
-	"minAppVersion": "1.0.2",
-	"description": "智能缩放：在编辑器内 Ctrl+滚轮调节字体大小，在编辑器外调节整体界面缩放。",
+	"id": "obsidian-zone-scroll-zoom",
+	"name": "Zone Scroll Zoom",
+	"version": "1.1.0",
+	"minAppVersion": "0.15.0",
+	"description": "Zoom where your mouse is — font in editor, interface elsewhere.",
 	"author": "kqint",
 	"authorUrl": "https://github.com/kqint",
 	"isDesktopOnly": true

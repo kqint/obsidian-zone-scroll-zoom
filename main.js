@@ -4,7 +4,8 @@ const { webFrame } = require('electron');
 
 // 1. 定义默认配置
 const DEFAULT_SETTINGS = {
-    zoomStep: 0.05
+    zoomStep: 0.05,
+    modifierKey: 'ctrl'
 }
 
 // 2. 自定义配置文件名
@@ -22,7 +23,7 @@ module.exports = class CtrlScrollZoomPlugin extends Plugin {
         this.addSettingTab(new CtrlScrollZoomSettingTab(this.app, this));
 
         this.registerDomEvent(window, 'wheel', (evt) => {
-            if (evt.ctrlKey || evt.metaKey) {
+            if (this.isModifierKeyPressed(evt)) {
                 evt.preventDefault();
                 const target = evt.target;
                 const isEditor = target.closest('.markdown-source-view') || 
@@ -34,6 +35,27 @@ module.exports = class CtrlScrollZoomPlugin extends Plugin {
                 }
             }
         }, { passive: false });
+    }
+    
+    // 检查修饰键是否按下
+    isModifierKeyPressed(evt) {
+        const key = this.settings.modifierKey || 'ctrl';
+        switch (key) {
+            case 'ctrl':
+                return evt.ctrlKey || evt.metaKey;
+            case 'shift':
+                return evt.shiftKey;
+            case 'alt':
+                return evt.altKey;
+            case 'ctrl+shift':
+                return (evt.ctrlKey || evt.metaKey) && evt.shiftKey;
+            case 'ctrl+alt':
+                return (evt.ctrlKey || evt.metaKey) && evt.altKey;
+            case 'shift+alt':
+                return evt.shiftKey && evt.altKey;
+            default:
+                return evt.ctrlKey || evt.metaKey;
+        }
     }
     
     // 获取配置文件的完整路径
@@ -157,6 +179,22 @@ class CtrlScrollZoomSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h2', { text: 'Ctrl+滚轮缩放设置' });
+
+        new Setting(containerEl)
+            .setName('快捷键修饰键')
+            .setDesc('选择触发缩放的修饰键组合（配合滚轮使用）。')
+            .addDropdown(dropdown => dropdown
+                .addOption('ctrl', 'Ctrl / Cmd')
+                .addOption('shift', 'Shift')
+                .addOption('alt', 'Alt')
+                .addOption('ctrl+shift', 'Ctrl+Shift / Cmd+Shift')
+                .addOption('ctrl+alt', 'Ctrl+Alt / Cmd+Alt')
+                .addOption('shift+alt', 'Shift+Alt')
+                .setValue(this.plugin.settings.modifierKey)
+                .onChange(async (value) => {
+                    this.plugin.settings.modifierKey = value;
+                    await this.plugin.saveSettings();
+                }));
 
         new Setting(containerEl)
             .setName('界面缩放步长 (精度)')
