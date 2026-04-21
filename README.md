@@ -1,6 +1,6 @@
 # Obsidian Zone Scroll Zoom
 
-[简体中文](README-zh.md) | English
+[简体中文](README.zh-CN.md) | English
 
 An Obsidian plugin that scales the interface and font with keyboard shortcuts, where the zoom behavior adapts to your mouse position.
 
