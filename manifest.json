@@ -1,7 +1,7 @@
 {
 	"id": "zone-scroll-zoom",
 	"name": "Zone Scroll Zoom",
-	"version": "1.3.0",
+	"version": "1.3.1",
 	"minAppVersion": "0.15.0",
 	"description": "Zoom where your mouse is — font in editor, interface elsewhere.",
 	"author": "kqint",
