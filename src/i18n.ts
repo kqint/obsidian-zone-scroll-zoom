@@ -1,4 +1,3 @@
-import { Plugin } from 'obsidian';
 import { TranslationData, TranslationVars, LanguageSetting } from './types';
 import ZoneScrollZoomPlugin from './main';
 

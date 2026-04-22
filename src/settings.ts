@@ -41,10 +41,6 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                     this.display();
                 }));
 
-        new Setting(containerEl)
-            .setName('')
-            .setDesc('');
-
         // Modifier key setting
         new Setting(containerEl)
             .setName(i18n.t('settings.modifierKey.name'))
@@ -77,10 +73,6 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 }));
 
-        new Setting(containerEl)
-            .setName('')
-            .setDesc('');
-
         // Current zoom display and reset
         const currentZoom = Math.round(webFrame.getZoomFactor() * 100);
         const zoomInfoSetting = new Setting(containerEl)
@@ -104,8 +96,8 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                 .setButtonText(i18n.t('settings.currentFontSize.reset'))
                 .setCta()
                 .onClick(() => {
-                    (this.app.vault as any).setConfig('baseFontSize', 16);
-                    (this.app as any).updateFontSize();
+                    ((this.app.vault as unknown) as VaultWithConfig).setConfig('baseFontSize', 16);
+                    ((this.app as unknown) as AppWithFontSize).updateFontSize();
                     fontInfoSetting.setDesc(i18n.t('settings.currentFontSize.desc', { value: 16 }));
                     this.plugin.showZoomTip(i18n.t('settings.currentFontSize.resetTip'));
                 }));

@@ -39,6 +39,13 @@
 
 - **插件清单**：`manifest.json` 必须包含 `id`、`name`、`version`、`minAppVersion` 等标准字段。
 
+- **代码规范**：
+  - Only these console methods are allowed: warn, error, debug.
+  - For a consistent UI use `new Setting(containerEl).setName(...).setHeading()` instead of creating HTML heading elements directly.
+  - 禁止没有 'await' 表达式的异步箭头函数。
+  - 禁止使用 `any` 类型，变量或函数参数必须定义明确的 TypeScript 类型或接口。
+
+
 ### 条件：浏览器插件开发
 
 当项目为浏览器插件（扩展）时，除通用规范外，还需遵守以下规则：
@@ -51,67 +58,10 @@
 
 ## 项目理解
 
-### 项目概述
-**Obsidian Zone Scroll Zoom** 是一个 Obsidian 桌面插件，实现基于鼠标位置的智能缩放功能：
-- **鼠标在编辑器区域**：滚动 + 修饰键 → 调整**编辑器字体大小**
-- **鼠标在非编辑器区域**：滚动 + 修饰键 → 调整**整个 Obsidian 界面缩放**
-
-### 技术栈
-- **语言**：TypeScript
-- **构建工具**：esbuild
-- **包管理**：npm
-- **国际化**：自定义 i18n 系统，支持 JSON 格式翻译文件
-
-### 目录结构
-```
-obsidian-zone-scroll-zoom/
-├── src/
-│   ├── main.ts          # 插件主入口，注册事件监听器
-│   ├── settings.ts      # 插件设置界面
-│   ├── types.ts         # TypeScript 类型定义
-│   └── i18n.ts          # 国际化实现
-├── locales/
-│   ├── en.json          # 英文翻译
-│   └── zh-CN.json       # 简体中文翻译
-├── esbuild.config.mjs   # esbuild 构建配置
-├── tsconfig.json        # TypeScript 配置
-├── package.json         # 依赖和脚本
-├── manifest.json        # 插件清单文件
-└── .gitignore          # 忽略构建产物
-```
-
-### 核心功能模块
-1. **事件处理** (`src/main.ts`)
-   - 监听 `wheel` 事件，检测修饰键状态
-   - 根据鼠标位置区分缩放区域（编辑器 vs 界面）
-   - 显示实时缩放提示（OSD）
-
-2. **设置界面** (`src/settings.ts`)
-   - 语言选择（自动/英文/中文）
-   - 修饰键配置（Ctrl、Shift、Alt 及其组合）
-   - 缩放精度调整
-   - 当前状态显示与重置功能
-
-3. **国际化** (`src/i18n.ts`)
-   - 根据用户设置或系统语言加载对应翻译
-   - 支持变量插值（如 `{value}%`）
-   - 翻译键层级结构（如 `settings.title`）
-
-4. **类型系统** (`src/types.ts`)
-   - 插件设置接口 `ZoneScrollZoomSettings`
-   - 修饰键类型 `ModifierKey`
-   - 语言设置类型 `LanguageSetting`
-   - 翻译数据结构 `TranslationData`
-
 ### 构建流程
 1. **开发模式**：`npm run dev` → `esbuild` 监听文件变化，生成带 sourcemap 的 `main.js`
 2. **生产构建**：`npm run build` → `esbuild` 打包 TypeScript 和 JSON 文件，生成优化后的 `main.js`
 3. **语言文件打包**：`esbuild` 通过 `loader: { '.json': 'json' }` 将 `locales/*.json` 内联到 bundle 中
-
-### 发布规范
-- 版本号：遵循语义化版本，更新 `manifest.json` 的 `version` 字段
-- 构建产物：`main.js` 不提交到 git，通过 GitHub Releases 分发
-- 发布包：包含 `main.js` 和 `manifest.json` 的 zip 文件
 
 ### 配置说明
 - **用户配置**：保存在 `data.json` 中（自动生成）
@@ -126,4 +76,5 @@ obsidian-zone-scroll-zoom/
 ### 注意事项
 - 插件仅支持桌面版 Obsidian（依赖 `electron` 的 `webFrame` API）
 - 编辑器字体缩放使用 Obsidian 内部 API `vault.getConfig/setConfig`
+- 设置页中的字体重置同样依赖内部 `App.updateFontSize()`
 - 界面缩放使用 `electron.webFrame.getZoomFactor/setZoomFactor`
