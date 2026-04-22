@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import { webFrame } from 'electron';
 import ZoneScrollZoomPlugin from './main';
+import { VaultWithConfig, AppWithFontSize } from './types';
 
 /**
  * Setting tab for Zone Scroll Zoom plugin
@@ -18,7 +19,9 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
         const i18n = this.plugin.i18n;
         containerEl.empty();
 
-        containerEl.createEl('h2', { text: i18n.t('settings.title') });
+        new Setting(containerEl)
+            .setName(i18n.t('settings.title'))
+            .setHeading();
 
         // Language setting
         new Setting(containerEl)
@@ -38,7 +41,9 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                     this.display();
                 }));
 
-        containerEl.createEl('br');
+        new Setting(containerEl)
+            .setName('')
+            .setDesc('');
 
         // Modifier key setting
         new Setting(containerEl)
@@ -72,7 +77,9 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 }));
 
-        containerEl.createEl('br');
+        new Setting(containerEl)
+            .setName('')
+            .setDesc('');
 
         // Current zoom display and reset
         const currentZoom = Math.round(webFrame.getZoomFactor() * 100);
@@ -82,21 +89,21 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
             .addButton(btn => btn
                 .setButtonText(i18n.t('settings.currentZoom.reset'))
                 .setCta()
-                .onClick(async () => {
+                .onClick(() => {
                     webFrame.setZoomFactor(1.0);
                     zoomInfoSetting.setDesc(i18n.t('settings.currentZoom.desc', { value: 100 }));
                     this.plugin.showZoomTip(i18n.t('settings.currentZoom.resetTip'));
                 }));
 
         // Current font size display and reset
-        const currentFontSize = (this.app.vault as any).getConfig('baseFontSize') || 16;
+        const currentFontSize = ((this.app.vault as unknown) as VaultWithConfig).getConfig('baseFontSize') as number || 16;
         const fontInfoSetting = new Setting(containerEl)
             .setName(i18n.t('settings.currentFontSize.name'))
             .setDesc(i18n.t('settings.currentFontSize.desc', { value: currentFontSize }))
             .addButton(btn => btn
                 .setButtonText(i18n.t('settings.currentFontSize.reset'))
                 .setCta()
-                .onClick(async () => {
+                .onClick(() => {
                     (this.app.vault as any).setConfig('baseFontSize', 16);
                     (this.app as any).updateFontSize();
                     fontInfoSetting.setDesc(i18n.t('settings.currentFontSize.desc', { value: 16 }));

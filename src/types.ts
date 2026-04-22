@@ -87,3 +87,20 @@ export interface TranslationData {
 export interface TranslationVars {
     [key: string]: string | number;
 }
+
+/**
+ * Extended Vault interface with Obsidian internal config methods
+ * Uses intersection type pattern to avoid direct cast incompatibility
+ */
+export type VaultWithConfig = {
+    getConfig(key: string): unknown;
+    setConfig(key: string, value: unknown): void;
+};
+
+/**
+ * Extended App interface with Obsidian internal font size update method
+ * Uses intersection type pattern to avoid direct cast incompatibility
+ */
+export type AppWithFontSize = {
+    updateFontSize(): void;
+};

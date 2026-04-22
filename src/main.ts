@@ -1,6 +1,6 @@
 import { Plugin, normalizePath } from 'obsidian';
 import { webFrame } from 'electron';
-import { ZoneScrollZoomSettings, ModifierKey } from './types';
+import { ZoneScrollZoomSettings, ModifierKey, VaultWithConfig, AppWithFontSize } from './types';
 import { I18n } from './i18n';
 import { ZoneScrollZoomSettingTab } from './settings';
 
@@ -33,7 +33,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
         this.i18n = new I18n(this);
         this.i18n.load();
         
-        console.log(this.i18n.t('console.loading'));
+        console.debug(this.i18n.t('console.loading'));
 
         // Add settings tab
         this.addSettingTab(new ZoneScrollZoomSettingTab(this.app, this));
@@ -116,7 +116,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
             const jsonString = JSON.stringify(this.settings, null, 2);
             // Write to file
             await this.app.vault.adapter.write(path, jsonString);
-            console.log(this.i18n.t('console.settingsSaved'));
+            console.debug(this.i18n.t('console.settingsSaved'));
         } catch (error) {
             console.error(this.i18n.t('console.saveFailed'), error);
         }
@@ -165,7 +165,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
      * Adjust editor font size
      */
     private adjustEditorFontSize(deltaY: number): void {
-        let currentSize = (this.app.vault as any).getConfig('baseFontSize') || 16;
+        let currentSize = ((this.app.vault as unknown) as VaultWithConfig).getConfig('baseFontSize') as number || 16;
         const step = 1;
         let newSize = currentSize;
         
@@ -179,8 +179,8 @@ export default class ZoneScrollZoomPlugin extends Plugin {
         if (newSize > 100) newSize = 100;
         
         if (newSize !== currentSize) {
-            (this.app.vault as any).setConfig('baseFontSize', newSize);
-            (this.app as any).updateFontSize();
+            ((this.app.vault as unknown) as VaultWithConfig).setConfig('baseFontSize', newSize);
+            ((this.app as unknown) as AppWithFontSize).updateFontSize();
             this.showZoomTip(this.i18n.t('tips.fontSize', { value: newSize }));
         }
     }

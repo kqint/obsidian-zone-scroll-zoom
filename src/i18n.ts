@@ -1,5 +1,6 @@
 import { Plugin } from 'obsidian';
 import { TranslationData, TranslationVars, LanguageSetting } from './types';
+import ZoneScrollZoomPlugin from './main';
 
 // Import locale files - these will be bundled by esbuild
 import enTranslations from '../locales/en.json';
@@ -9,7 +10,7 @@ import zhTranslations from '../locales/zh-CN.json';
  * Internationalization class for handling translations
  */
 export class I18n {
-    private plugin: Plugin;
+    private plugin: ZoneScrollZoomPlugin;
     private lang: LanguageSetting = 'en';
     private translations: TranslationData;
 
@@ -19,7 +20,7 @@ export class I18n {
         zh: zhTranslations
     };
 
-    constructor(plugin: Plugin) {
+    constructor(plugin: ZoneScrollZoomPlugin) {
         this.plugin = plugin;
         this.translations = I18n.BUILT_IN_LOCALES.en;
     }
@@ -29,7 +30,7 @@ export class I18n {
      */
     load(): void {
         // Get user setting language
-        let userLang: string = (this.plugin as any).settings?.language || 'auto';
+        let userLang: string = this.plugin.settings.language || 'auto';
         
         // If auto, use Obsidian interface language
         if (userLang === 'auto') {
