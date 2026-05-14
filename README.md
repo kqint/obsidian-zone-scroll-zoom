@@ -17,37 +17,48 @@ An Obsidian plugin that scales the interface and font with keyboard shortcuts, w
 - **Multi-language Support**: Supports Simplified Chinese and English. Switch languages in settings or follow Obsidian's system language.
 - **Reset Zoom Ratio**: A button in the settings page to quickly restore default font size (16px) or interface scale (100%).
 
-## Why Use This Plugin?
-
-Obsidian natively supports zooming the interface with `Ctrl + =` and `Ctrl + -`, but this is a **global zoom** — the editor and interface scale together, with no way to adjust font size independently.
-
-This plugin lets you **zoom where your mouse is** — scale only the font in the editor area, and zoom the interface elsewhere. Just scroll, and it's done. Faster and more convenient.
+> [!note]
+> Before using this plugin, go to Settings → Appearance and disable "Quick font size adjustment".
 
 ## Installation
 
-#### Manual Installation (This plugin is not yet available in the Obsidian community plugin marketplace)
+#### Community Plugin Marketplace
+
+Open Obsidian Settings → Community Plugins → Browse, search "Zone Scroll Zoom", install and enable.
+
+Or visit the [plugin page](https://community.obsidian.md/plugins/zone-scroll-zoom) and click "Add to Obsidian".
+
+#### BRAT Installation
+
+1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat).
+2. Open BRAT settings → `Add Beta Plugin`.
+3. Enter repository: `kqint/obsidian-zone-scroll-zoom`.
+
+#### Manual Installation
+
 1. Download `main.js` and `manifest.json` from [releases/latest](https://github.com/kqint/obsidian-zone-scroll-zoom/releases/latest).
 2. Create an `obsidian-zone-scroll-zoom` folder inside `.obsidian/plugins/`, and place `main.js` and `manifest.json` into this folder.
 3. Enable the plugin in Obsidian settings.
 
 ## Internationalization
 
-Language source files are located in `locales/`:
+Language source files are located in `src/locales/`:
 
-- `locales/en.json`
-- `locales/zh-CN.json`
+- `src/locales/en.json`
+- `src/locales/zh-CN.json`
 
-Use the following command to bundle these language files into `main.js`:
+### Adding a New Language
 
-```bash
-npm run build
-```
+1. Copy `src/locales/en.json` to `src/locales/xx.json` and translate all string **values** (keep the keys as-is).
+2. In `src/i18n.ts`, register your locale by adding:
+   - An import for your JSON file
+   - An entry in `BUILT_IN_LOCALES`
+   - Obsidian language code mappings in `OBSIDIAN_LANG_MAP`
+   - Locale metadata in `LOCALE_META`
+3. Add the locale option name to all existing locale files under `settings.language.options`.
+4. Run `npm run build` and test.
 
-To add a new language:
-
-1. Copy `locales/en.json`, for example to `locales/ja.json`.
-2. Translate all values.
-3. Add the corresponding language option in `src/main.ts` and run `npm run build`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the detailed step-by-step guide.
 
 ## License
 

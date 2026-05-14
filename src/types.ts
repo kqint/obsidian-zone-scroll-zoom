@@ -19,9 +19,10 @@ export type ModifierKey =
     | 'shift+alt';
 
 /**
- * Language setting options
+ * Language setting — extendable for future locale additions.
+ * The settings UI will list available options from I18n.getAvailableLocales().
  */
-export type LanguageSetting = 'auto' | 'zh' | 'en';
+export type LanguageSetting = string;
 
 /**
  * Translation data structure

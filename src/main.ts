@@ -1,4 +1,4 @@
-import { Plugin, normalizePath } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { webFrame } from 'electron';
 import { ZoneScrollZoomSettings, ModifierKey, VaultWithConfig, AppWithFontSize } from './types';
 import { I18n } from './i18n';
@@ -10,9 +10,6 @@ const DEFAULT_SETTINGS: ZoneScrollZoomSettings = {
     modifierKey: 'ctrl',
     language: 'auto'
 };
-
-// Config file name
-const CONFIG_FILE_NAME = 'data.json';
 
 /**
  * Zone Scroll Zoom Plugin
@@ -77,45 +74,19 @@ export default class ZoneScrollZoomPlugin extends Plugin {
         }
     }
 
-    /**
-     * Get config file path
-     */
-    private getConfigPath(): string {
-        return normalizePath(`${this.manifest.dir}/${CONFIG_FILE_NAME}`);
-    }
-
-    /**
-     * Load settings from data.json
-     */
     async loadSettings(): Promise<void> {
-        const path = this.getConfigPath();
         try {
-            // Check if file exists
-            if (await this.app.vault.adapter.exists(path)) {
-                // Read file content
-                const data = await this.app.vault.adapter.read(path);
-                // Parse JSON and merge with default settings
-                this.settings = Object.assign({}, DEFAULT_SETTINGS, JSON.parse(data));
-            } else {
-                // Use defaults if file doesn't exist
-                this.settings = Object.assign({}, DEFAULT_SETTINGS);
-            }
+            const data = await this.loadData();
+            this.settings = Object.assign({}, DEFAULT_SETTINGS, data ?? {});
         } catch (error) {
             console.error(this.i18n.t('console.loadFailed'), error);
             this.settings = Object.assign({}, DEFAULT_SETTINGS);
         }
     }
 
-    /**
-     * Save settings to data.json
-     */
     async saveSettings(): Promise<void> {
-        const path = this.getConfigPath();
         try {
-            // Convert settings object to JSON string
-            const jsonString = JSON.stringify(this.settings, null, 2);
-            // Write to file
-            await this.app.vault.adapter.write(path, jsonString);
+            await this.saveData(this.settings);
             console.debug(this.i18n.t('console.settingsSaved'));
         } catch (error) {
             console.error(this.i18n.t('console.saveFailed'), error);
@@ -127,7 +98,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
      */
     showZoomTip(text: string): void {
         if (!this.tipElement) {
-            this.tipElement = document.createElement('div');
+            this.tipElement = activeDocument.createElement('div');
             this.tipElement.style.cssText = `
                 position: fixed;
                 top: 10%; 
@@ -145,7 +116,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 backdrop-filter: blur(5px);
             `;
-            document.body.appendChild(this.tipElement);
+            activeDocument.body.appendChild(this.tipElement);
         }
         this.tipElement.innerText = text;
         

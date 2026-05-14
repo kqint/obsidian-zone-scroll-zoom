@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import { webFrame } from 'electron';
 import ZoneScrollZoomPlugin from './main';
+import { I18n } from './i18n';
 import { VaultWithConfig, AppWithFontSize } from './types';
 
 /**
@@ -27,19 +28,22 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName(i18n.t('settings.language.name'))
             .setDesc(i18n.t('settings.language.desc'))
-            .addDropdown(dropdown => dropdown
-                .addOption('auto', i18n.t('settings.language.options.auto'))
-                .addOption('en', i18n.t('settings.language.options.en'))
-                .addOption('zh', i18n.t('settings.language.options.zh'))
-                .setValue(this.plugin.settings.language)
-                .onChange(async (value) => {
-                    this.plugin.settings.language = value as 'auto' | 'en' | 'zh';
-                    await this.plugin.saveSettings();
-                    // Reload i18n
-                    this.plugin.i18n.load();
-                    // Refresh settings UI
-                    this.display();
-                }));
+            .addDropdown(dropdown => {
+                dropdown.addOption('auto', i18n.t('settings.language.options.auto'));
+                for (const locale of I18n.getAvailableLocales()) {
+                    // Use translation key if available, otherwise fall back to native name
+                    const label = i18n.t(`settings.language.options.${locale.code}`);
+                    dropdown.addOption(locale.code, label === `settings.language.options.${locale.code}` ? locale.name : label);
+                }
+                return dropdown
+                    .setValue(this.plugin.settings.language)
+                    .onChange(async (value) => {
+                        this.plugin.settings.language = value;
+                        await this.plugin.saveSettings();
+                        this.plugin.i18n.load();
+                        this.display();
+                    });
+            });
 
         // Modifier key setting
         new Setting(containerEl)
