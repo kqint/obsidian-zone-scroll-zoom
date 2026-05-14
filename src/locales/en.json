@@ -7,7 +7,7 @@
       "options": {
         "auto": "Auto",
         "en": "English",
-        "zh": "中文"
+        "zh-CN": "简体中文"
       }
     },
     "modifierKey": {

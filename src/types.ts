@@ -36,7 +36,7 @@ export interface TranslationData {
             options: {
                 auto: string;
                 en: string;
-                zh: string;
+                'zh-CN': string;
             };
         };
         modifierKey: {

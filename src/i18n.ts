@@ -4,7 +4,7 @@ import ZoneScrollZoomPlugin from './main';
 
 // Import locale files - these will be bundled by esbuild
 import enTranslations from './locales/en.json';
-import zhTranslations from './locales/zh-CN.json';
+import zhCNTranslations from './locales/zh-CN.json';
 
 // === Locale Registry ===
 // To add a new language:
@@ -22,20 +22,20 @@ interface LocaleMeta {
 
 const LOCALE_META: LocaleMeta[] = [
     { code: 'en', name: 'English' },
-    { code: 'zh', name: '中文' },
+    { code: 'zh-CN', name: '简体中文' },
 ];
 
 const BUILT_IN_LOCALES: Record<string, TranslationData> = {
     en: enTranslations,
-    zh: zhTranslations,
+    'zh-CN': zhCNTranslations,
+    // 'zh-TW': zhTWTranslations, // Add when Traditional Chinese is supported
 };
 
 // Maps Obsidian's getLanguage() return values to our locale codes
 const OBSIDIAN_LANG_MAP: Record<string, string> = {
-    'en': 'en',
-    'zh': 'zh',
-    'zh-cn': 'zh',
-    'zh-tw': 'zh',
+    en: 'en',
+    zh: 'zh-CN',
+    'zh-cn': 'zh-CN',
 };
 
 /**
