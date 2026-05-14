@@ -14,7 +14,7 @@
 ### 2. 代码国际化（i18n）
 
 - **用户可见文本**：代码中所有面向用户的字符串（如 UI 标签、提示信息、错误消息等）必须通过 i18n 机制加载，**禁止硬编码**。
-- **语言文件目录**：`locales/`
+- **语言文件目录**：`src/locales/`
   - 支持语言要求：必须使用`en.json`（英语）、`zh-CN.json`（简体中文）的命名。
   - 文件格式：JSON 键值对，键名采用 `kebab-case` 或 `camelCase`，建议按功能模块嵌套。
 - **调用方式**：在代码中使用统一的 i18n 函数，例如 `t("key.path")`。具体实现根据项目技术栈确定（如 `i18next`、`chrome.i18n` 或自定义 loader）。
@@ -30,8 +30,8 @@
 
 当项目为 Obsidian 插件时，除通用规范外，还需遵守以下规则：
 
-- **构建要求**：开发完成后，**必须**使用构建工具（如 `esbuild`、`rollup`、`webpack`）将 `locales/` 目录下的所有语言文件打包进最终的 `main.js` 中。不允许在运行时从外部加载语言文件。
-- **禁止直接内联**：**严禁**在 `main.js` 中以硬编码对象（如 `BUILT_IN_LOCALES = { en: {...}, zh: {...} }`）的方式直接嵌入语言数据。必须通过构建工具从独立的 `locales/*.json` 文件读取并打包，保持语言文件的独立性和可维护性。
+- **构建要求**：开发完成后，**必须**使用构建工具（如 `esbuild`、`rollup`、`webpack`）将 `src/locales/` 目录下的所有语言文件打包进最终的 `main.js` 中。不允许在运行时从外部加载语言文件。
+- **禁止直接内联**：**严禁**在 `main.js` 中以硬编码对象（如 `BUILT_IN_LOCALES = { en: {...}, zh: {...} }`）的方式直接嵌入语言数据。必须通过构建工具从独立的 `src/locales/*.json` 文件读取并打包，保持语言文件的独立性和可维护性。
 - **版本管理**：
   - 每次发布前，**必须**更新 `manifest.json` 中的 `version` 字段（遵循语义化版本 `major.minor.patch`），禁止带v。
   - 构建产物 `main.js` **必须**添加到 `.gitignore`，不提交至 GitHub 仓库。
@@ -45,23 +45,12 @@
   - 禁止没有 'await' 表达式的异步箭头函数。
   - 禁止使用 `any` 类型，变量或函数参数必须定义明确的 TypeScript 类型或接口。
 
-
-### 条件：浏览器插件开发
-
-当项目为浏览器插件（扩展）时，除通用规范外，还需遵守以下规则：
-
-- **Manifest 版本**：使用 Manifest V3（除非有特殊兼容性需求）。
-- **国际化 API**：必须使用 Chrome 扩展原生的 `chrome.i18n` API（或 Firefox 对应的 `browser.i18n`）。
-  - 语言文件位置：`_locales/<locale>/messages.json`
-  - 支持的语言至少包含 `en` 和 `zh_CN`。
-- **权限声明**：仅请求必要的权限，避免过度索取
-
 ## 项目理解
 
 ### 构建流程
 1. **开发模式**：`npm run dev` → `esbuild` 监听文件变化，生成带 sourcemap 的 `main.js`
 2. **生产构建**：`npm run build` → `esbuild` 打包 TypeScript 和 JSON 文件，生成优化后的 `main.js`
-3. **语言文件打包**：`esbuild` 通过 `loader: { '.json': 'json' }` 将 `locales/*.json` 内联到 bundle 中
+3. **语言文件打包**：`esbuild` 通过 `loader: { '.json': 'json' }` 将 `src/locales/*.json` 内联到 bundle 中
 
 ### 配置说明
 - **用户配置**：保存在 `data.json` 中（自动生成）
@@ -71,10 +60,12 @@
 
 ### 依赖关系
 - **生产依赖**：无（纯 Obsidian API 调用）
-- **开发依赖**：`obsidian`（类型定义）、`esbuild`、`typescript`、`tslib`、`@types/node`、`builtin-modules`
+- **开发依赖**：`obsidian`（类型定义）、`esbuild`、`typescript`、`tslib`、`@types/node`
 
 ### 注意事项
 - 插件仅支持桌面版 Obsidian（依赖 `electron` 的 `webFrame` API）
-- 编辑器字体缩放使用 Obsidian 内部 API `vault.getConfig/setConfig`
-- 设置页中的字体重置同样依赖内部 `App.updateFontSize()`
-- 界面缩放使用 `electron.webFrame.getZoomFactor/setZoomFactor`
+- **区域缩放行为**：
+  - 鼠标在编辑区 → 调整编辑器字体大小（通过 `vault.getConfig('baseFontSize')` / `vault.setConfig`）
+  - 鼠标在其他区域 → 调整全局界面缩放（通过 `webFrame.getZoomFactor()` / `webFrame.setZoomFactor()`）
+- 设置页中的字体重置依赖内部 API `App.updateFontSize()`
+- 国际化系统使用 `I18n.getAvailableLocales()` 动态生成语言下拉菜单，新增语言无需修改 settings.ts
