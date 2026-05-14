@@ -89,21 +89,23 @@ Here's the complete diff for adding Japanese (`ja`):
 
   const LOCALE_META: LocaleMeta[] = [
       { code: 'en', name: 'English' },
-      { code: 'zh', name: '中文' },
+      { code: 'zh-CN', name: '简体中文' },
+      { code: 'zh-TW', name: '繁體中文' },
 +     { code: 'ja', name: '日本語' },
   ];
 
   const BUILT_IN_LOCALES: Record<string, TranslationData> = {
-      en: enTranslations,
-      zh: zhTranslations,
-+     ja: jaTranslations,
+      'en': enTranslations,
+      'zh-CN': zhCNTranslations,
+      'zh-TW': zhTWTranslations,
++     'ja': jaTranslations,
   };
 
   const OBSIDIAN_LANG_MAP: Record<string, string> = {
       'en': 'en',
-      'zh': 'zh',
-      'zh-cn': 'zh',
-      'zh-tw': 'zh',
+      'zh': 'zh-CN',
+      'zh-cn': 'zh-CN',
+      'zh-tw': 'zh-TW',
 +     'ja': 'ja',
   };
 ```
@@ -113,7 +115,8 @@ Here's the complete diff for adding Japanese (`ja`):
   "options": {
       "auto": "Auto",
       "en": "English",
-      "zh": "中文",
+      "zh-CN": "简体中文",
+      "zh-TW": "繁體中文",
 +     "ja": "日本語"
   }
 ```
@@ -123,10 +126,26 @@ Here's the complete diff for adding Japanese (`ja`):
   "options": {
       "auto": "自动",
       "en": "English",
-      "zh": "中文",
+      "zh-CN": "简体中文",
+      "zh-TW": "繁體中文",
 +     "ja": "日本語"
   }
 ```
+
+## Translating the README
+
+The English [README.md](README.md) is the authoritative version. Translated READMEs live in `docs/`:
+
+- `docs/README.zh-CN.md` — Simplified Chinese
+- `docs/README.zh-TW.md` — Traditional Chinese
+
+To add or update a README translation:
+
+1. Copy `README.md` and translate all content, keeping the formatting and structure intact.
+2. Update the language selector at the top to link to all available translations.
+3. Place the file in `docs/` with the appropriate locale suffix (e.g., `README.ja.md` for Japanese).
+4. Adjust relative paths — assets need `../` prefix (e.g., `../assets/demo.gif`), and links to `README.md` or `CONTRIBUTING.md` need `../` as well.
+5. Update the language selector in [README.md](README.md) to include the new translation.
 
 ## Code Style
 

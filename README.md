@@ -1,6 +1,6 @@
 # Obsidian Zone Scroll Zoom
 
-[简体中文](README.zh-CN.md) | English
+[简体中文](docs/README.zh-CN.md) | [繁體中文](docs/README.zh-TW.md) | English
 
 An Obsidian plugin that scales the interface and font with keyboard shortcuts, where the zoom behavior adapts to your mouse position.
 
@@ -14,7 +14,7 @@ An Obsidian plugin that scales the interface and font with keyboard shortcuts, w
   - **Mouse in Non-Editor Area**: Zooms the **entire Obsidian interface** (including sidebar, menus).
 - **Real-time Status Display**: A clean **OSD indicator** appears at the top of the screen, showing the current scale/font size in real time.
 - **Customizable Settings**: Adjust zoom precision in settings, modify shortcuts (supports Ctrl/Cmd, Shift, Alt). Personal settings are automatically saved to `data.json`.
-- **Multi-language Support**: Supports Simplified Chinese and English. Switch languages in settings or follow Obsidian's system language.
+- **Multi-language Support**: Supports English, Simplified Chinese, and Traditional Chinese. Switch languages in settings or follow Obsidian's system language.
 - **Reset Zoom Ratio**: A button in the settings page to quickly restore default font size (16px) or interface scale (100%).
 
 > [!note]
@@ -46,6 +46,7 @@ Language source files are located in `src/locales/`:
 
 - `src/locales/en.json`
 - `src/locales/zh-CN.json`
+- `src/locales/zh-TW.json`
 
 ### Adding a New Language
 
