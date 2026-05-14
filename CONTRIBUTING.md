@@ -37,7 +37,7 @@ Copy `src/locales/en.json` to `src/locales/xx.json` (use the language code, e.g.
 
 ### Step 2: Register the locale in `src/i18n.ts`
 
-Make four changes to [src/i18n.ts](src/i18n.ts):
+Make four changes to [src/i18n.ts](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/src/i18n.ts):
 
 - **Import** the JSON file at the top of the file
 - **BUILT_IN_LOCALES** — add an entry mapping the locale code to the imported data
@@ -134,7 +134,7 @@ Here's the complete diff for adding Japanese (`ja`):
 
 ## Translating the README
 
-The English [README.md](README.md) is the authoritative version. Translated READMEs live in `docs/`:
+The English [README.md](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/README.md) is the authoritative version. Translated READMEs live in `docs/`:
 
 - `docs/README.zh-CN.md` — Simplified Chinese
 - `docs/README.zh-TW.md` — Traditional Chinese
@@ -145,7 +145,7 @@ To add or update a README translation:
 2. Update the language selector at the top to link to all available translations.
 3. Place the file in `docs/` with the appropriate locale suffix (e.g., `README.ja.md` for Japanese).
 4. Adjust relative paths — assets need `../` prefix (e.g., `../assets/demo.gif`), and links to `README.md` or `CONTRIBUTING.md` need `../` as well.
-5. Update the language selector in [README.md](README.md) to include the new translation.
+5. Update the language selector in [README.md](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/README.md) to include the new translation.
 
 ## Code Style
 
@@ -156,4 +156,4 @@ To add or update a README translation:
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+By contributing, you agree that your contributions will be licensed under the [MIT License](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/LICENSE).

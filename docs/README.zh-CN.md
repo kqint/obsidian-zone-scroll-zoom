@@ -1,6 +1,6 @@
 # Obsidian Zone Scroll Zoom
 
-简体中文 | [繁體中文](README.zh-TW.md) | [English](../README.md)
+简体中文 | [繁體中文](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/docs/README.zh-TW.md) | [English](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/README.md)
 
 一个 Obsidian 插件，通过快捷键缩放整体界面或字体大小，缩放行为会跟随鼠标位置自适应。
 
@@ -60,8 +60,8 @@
 3. 在所有现有语言文件中的 `settings.language.options` 下添加新语言选项名。
 4. 运行 `npm run build` 并测试。
 
-详细步骤见 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+详细步骤见 [CONTRIBUTING.md](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/CONTRIBUTING.md)。
 
 ## 许可证
 
-[MIT License](../LICENSE)
+[MIT License](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/LICENSE)

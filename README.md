@@ -1,6 +1,6 @@
 # Obsidian Zone Scroll Zoom
 
-[简体中文](docs/README.zh-CN.md) | [繁體中文](docs/README.zh-TW.md) | English
+[简体中文](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/docs/README.zh-TW.md) | English
 
 An Obsidian plugin that scales the interface and font with keyboard shortcuts, where the zoom behavior adapts to your mouse position.
 
@@ -59,8 +59,8 @@ Language source files are located in `src/locales/`:
 3. Add the locale option name to all existing locale files under `settings.language.options`.
 4. Run `npm run build` and test.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the detailed step-by-step guide.
+See [CONTRIBUTING.md](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/CONTRIBUTING.md) for the detailed step-by-step guide.
 
 ## License
 
-[MIT License](LICENSE)
+[MIT License](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/LICENSE)
