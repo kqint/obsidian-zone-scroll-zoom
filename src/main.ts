@@ -76,7 +76,7 @@ export default class ZoneScrollZoomPlugin extends Plugin {
 
     async loadSettings(): Promise<void> {
         try {
-            const data = await this.loadData();
+            const data = await this.loadData() as Partial<ZoneScrollZoomSettings> | null;
             this.settings = Object.assign({}, DEFAULT_SETTINGS, data ?? {});
         } catch (error) {
             console.error(this.i18n.t('console.loadFailed'), error);

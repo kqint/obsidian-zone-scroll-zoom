@@ -1,6 +1,5 @@
 import esbuild from "esbuild";
 import process from "process";
-import { builtinModules } from "node:module";
 
 const banner = `/* main.js */`;
 
@@ -26,7 +25,7 @@ const buildOptions = {
         "@lezer/common",
         "@lezer/highlight",
         "@lezer/lr",
-        ...builtinModules],
+    ],
     format: "cjs",
     target: "es2018",
     logLevel: "info",
