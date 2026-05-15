@@ -38,9 +38,15 @@ export default class ZoneScrollZoomPlugin extends Plugin {
         // Register wheel event handler
         this.registerDomEvent(window, 'wheel', (evt: WheelEvent) => {
             if (this.isModifierKeyPressed(evt)) {
-                evt.preventDefault();
                 const target = evt.target as HTMLElement;
-                const isEditor = target.closest('.markdown-source-view') || 
+
+                // Canvas has its own native zoom, don't intercept
+                if (target.closest('.canvas-wrapper')) {
+                    return;
+                }
+
+                evt.preventDefault();
+                const isEditor = target.closest('.markdown-source-view') ||
                                  target.closest('.markdown-preview-view');
                 if (isEditor) {
                     this.adjustEditorFontSize(evt.deltaY);
