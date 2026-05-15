@@ -20,6 +20,18 @@ npm run build  # production build
 
 Copy or symlink the repo into your vault's `.obsidian/plugins/` folder and reload Obsidian to test changes.
 
+### Versioning
+
+Use `npm version` to bump the plugin version. It updates `package.json`, `manifest.json`, and `package-lock.json` in one command:
+
+```bash
+npm version patch    # 1.3.5 → 1.3.6
+npm version minor    # 1.3.5 → 1.4.0
+npm version major    # 1.3.5 → 2.0.0
+```
+
+This automatically syncs the version across all required files and creates a git tag. The sync logic lives in [`version-bump.mjs`](https://github.com/kqint/obsidian-zone-scroll-zoom/blob/main/version-bump.mjs), triggered by the `version` lifecycle hook in `package.json`.
+
 ## Submitting Pull Requests
 
 1. Fork the repository and create a feature branch from `main`.
