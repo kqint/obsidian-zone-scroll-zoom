@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npx esbuild *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
     ]
   }
 }
