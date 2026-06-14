@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/electron": "^1.4.38",
     "@types/node": "^20.0.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.1",
     "obsidian": "latest",
     "tslib": "^2.6.0",
     "typescript": "^5.2.0"
