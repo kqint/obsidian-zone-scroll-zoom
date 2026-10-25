@@ -65,7 +65,12 @@
 ### 注意事项
 - 插件仅支持桌面版 Obsidian（依赖 `electron` 的 `webFrame` API）
 - **区域缩放行为**：
-  - 鼠标在编辑区 → 调整编辑器字体大小（通过 `vault.getConfig('baseFontSize')` / `vault.setConfig`）
+  - 鼠标在编辑区 → 调整编辑器字体大小（统一走 `plugin.getEditorFontSize()` / `plugin.setEditorFontSize()`）
   - 鼠标在其他区域 → 调整全局界面缩放（通过 `webFrame.getZoomFactor()` / `webFrame.setZoomFactor()`）
-- 设置页中的字体重置依赖内部 API `App.updateFontSize()`
+- **基础字号 API 双路径（重要）**：
+  - Obsidian 1.14.2 起，基础字号从 `appearance.json`（`vault.getConfig('baseFontSize')`）迁移到**设备本地存储**（`app.saveLocalStorage('base-font-size', n)`），
+    并新增内部 API `app.getBaseFontSize()` / `app.setBaseFontSize(n)`；旧写法 `setConfig` 仍会写 `appearance.json`，但不再影响渲染，导致字体缩放“看起来失效”。
+  - 因此 `main.ts` 中 `getEditorFontSize()` / `setEditorFontSize()` 优先探测新 API，不存在时才回退到旧的 `vault.getConfig` + `app.updateFontSize()`，兼容 1.14.2 之前版本。
+  - 字号范围固定为 10–30（与 Obsidian 设置页滑块及内部 clamp 一致，默认 16）；`setBaseFontSize()` 内部会自动刷新 UI，无需再调 `updateFontSize()`。
+  - `app.updateFontSize()` 的实际作用：设置 `body { --font-text-size }` 与 `html { font-size: calc(Npx * var(--preferred-text-scale,1)) }`。
 - 国际化系统使用 `I18n.getAvailableLocales()` 动态生成语言下拉菜单，新增语言无需修改 settings.ts

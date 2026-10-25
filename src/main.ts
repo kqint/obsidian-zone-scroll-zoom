@@ -1,6 +1,12 @@
 import { Plugin } from 'obsidian';
 import { webFrame } from 'electron';
-import { ZoneScrollZoomSettings, ModifierKey, VaultWithConfig, AppWithFontSize } from './types';
+import {
+    ZoneScrollZoomSettings,
+    ModifierKey,
+    VaultWithConfig,
+    AppWithFontSize,
+    AppWithBaseFontSize
+} from './types';
 import { I18n } from './i18n';
 import { ZoneScrollZoomSettingTab } from './settings';
 
@@ -10,6 +16,11 @@ const DEFAULT_SETTINGS: ZoneScrollZoomSettings = {
     modifierKey: 'ctrl',
     language: 'auto'
 };
+
+// Base font size limits — Obsidian clamps the value to the same range
+const MIN_FONT_SIZE = 10;
+const MAX_FONT_SIZE = 30;
+const DEFAULT_FONT_SIZE = 16;
 
 /**
  * Zone Scroll Zoom Plugin
@@ -139,25 +150,62 @@ export default class ZoneScrollZoomPlugin extends Plugin {
     }
 
     /**
+     * Read the current editor base font size.
+     *
+     * Obsidian 1.14.2 moved the base font size from `appearance.json` to
+     * per-device local storage and added `app.getBaseFontSize()`, which clamps
+     * the value to 10-30. Older versions only expose it through the vault
+     * config, so both paths are supported.
+     */
+    getEditorFontSize(): number {
+        const app = this.app as unknown as Partial<AppWithBaseFontSize>;
+        if (typeof app.getBaseFontSize === 'function') {
+            const size = app.getBaseFontSize();
+            if (typeof size === 'number' && Number.isFinite(size)) {
+                return size;
+            }
+        }
+
+        const legacySize = ((this.app.vault as unknown) as VaultWithConfig).getConfig('baseFontSize');
+        if (typeof legacySize === 'number' && Number.isFinite(legacySize)) {
+            return legacySize;
+        }
+
+        return DEFAULT_FONT_SIZE;
+    }
+
+    /**
+     * Apply a new editor base font size.
+     *
+     * Uses the Obsidian 1.14.2+ API when available (which also persists the
+     * value to device local storage and refreshes the UI), otherwise falls back
+     * to the legacy vault config + `app.updateFontSize()` combination.
+     */
+    setEditorFontSize(size: number): void {
+        const clamped = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, Math.round(size)));
+        const app = this.app as unknown as Partial<AppWithBaseFontSize> & Partial<AppWithFontSize>;
+
+        if (typeof app.setBaseFontSize === 'function') {
+            app.setBaseFontSize(clamped);
+            return;
+        }
+
+        ((this.app.vault as unknown) as VaultWithConfig).setConfig('baseFontSize', clamped);
+        if (typeof app.updateFontSize === 'function') {
+            app.updateFontSize();
+        }
+    }
+
+    /**
      * Adjust editor font size
      */
     private adjustEditorFontSize(deltaY: number): void {
-        let currentSize = ((this.app.vault as unknown) as VaultWithConfig).getConfig('baseFontSize') as number || 16;
-        const step = 1;
-        let newSize = currentSize;
-        
-        if (deltaY < 0) {
-            newSize += step;
-        } else {
-            newSize -= step;
-        }
-        
-        if (newSize < 10) newSize = 10;
-        if (newSize > 100) newSize = 100;
-        
+        const currentSize = Math.round(this.getEditorFontSize());
+        const step = deltaY < 0 ? 1 : -1;
+        const newSize = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, currentSize + step));
+
         if (newSize !== currentSize) {
-            ((this.app.vault as unknown) as VaultWithConfig).setConfig('baseFontSize', newSize);
-            ((this.app as unknown) as AppWithFontSize).updateFontSize();
+            this.setEditorFontSize(newSize);
             this.showZoomTip(this.i18n.t('tips.fontSize', { value: newSize }));
         }
     }

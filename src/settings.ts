@@ -2,7 +2,6 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import { webFrame } from 'electron';
 import ZoneScrollZoomPlugin from './main';
 import { I18n } from './i18n';
-import { VaultWithConfig, AppWithFontSize } from './types';
 
 /**
  * Setting tab for Zone Scroll Zoom plugin
@@ -92,7 +91,7 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                 }));
 
         // Current font size display and reset
-        const currentFontSize = ((this.app.vault as unknown) as VaultWithConfig).getConfig('baseFontSize') as number || 16;
+        const currentFontSize = this.plugin.getEditorFontSize();
         const fontInfoSetting = new Setting(containerEl)
             .setName(i18n.t('settings.currentFontSize.name'))
             .setDesc(i18n.t('settings.currentFontSize.desc', { value: currentFontSize }))
@@ -100,8 +99,7 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
                 .setButtonText(i18n.t('settings.currentFontSize.reset'))
                 .setCta()
                 .onClick(() => {
-                    ((this.app.vault as unknown) as VaultWithConfig).setConfig('baseFontSize', 16);
-                    ((this.app as unknown) as AppWithFontSize).updateFontSize();
+                    this.plugin.setEditorFontSize(16);
                     fontInfoSetting.setDesc(i18n.t('settings.currentFontSize.desc', { value: 16 }));
                     this.plugin.showZoomTip(i18n.t('settings.currentFontSize.resetTip'));
                 }));

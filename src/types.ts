@@ -106,3 +106,16 @@ export type VaultWithConfig = {
 export type AppWithFontSize = {
     updateFontSize(): void;
 };
+
+/**
+ * Extended App interface with Obsidian internal base font size accessors.
+ *
+ * Since Obsidian 1.14.2 the base font size is no longer read from
+ * `appearance.json` (vault config) but from per-device local storage, and the
+ * app exposes `getBaseFontSize()` / `setBaseFontSize()` for it. On older
+ * versions these methods do not exist, so they must be probed at runtime.
+ */
+export type AppWithBaseFontSize = {
+    getBaseFontSize(): number;
+    setBaseFontSize(size: number): void;
+};
