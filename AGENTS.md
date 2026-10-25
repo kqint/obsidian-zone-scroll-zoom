@@ -73,4 +73,13 @@
   - 因此 `main.ts` 中 `getEditorFontSize()` / `setEditorFontSize()` 优先探测新 API，不存在时才回退到旧的 `vault.getConfig` + `app.updateFontSize()`，兼容 1.14.2 之前版本。
   - 字号范围固定为 10–30（与 Obsidian 设置页滑块及内部 clamp 一致，默认 16）；`setBaseFontSize()` 内部会自动刷新 UI，无需再调 `updateFontSize()`。
   - `app.updateFontSize()` 的实际作用：设置 `body { --font-text-size }` 与 `html { font-size: calc(Npx * var(--preferred-text-scale,1)) }`。
+- **设置页 API 双路径（重要）**：
+  - Obsidian 1.13.0 起设置项改为声明式：必须实现 `PluginSettingTab.getSettingDefinitions()`，否则设置项不会出现在设置搜索里；
+    控件值通过覆写 `getControlValue(key)` / `setControlValue(key, value)` 读写，`display()` 已标记 deprecated。
+  - `settings.ts` 同时保留两者：`getSettingDefinitions()` 供 1.13+ 使用，`display()` 作为 1.13 以下的兜底（`minAppVersion` 为 1.8.7）。
+  - 声明式 API 需要 `obsidian` 类型包 ≥ 1.13.0（当前 1.14.4），改这一层时注意同步 `package-lock.json`。
+  - 修改语言时 `setControlValue` 会 `i18n.load()` 后延迟调用 `this.update()` 重建定义（标签需重新翻译）。
+- **DOM 规范**：创建元素统一用 Obsidian 的 `createDiv` / `createEl` / `createSpan`（审核规则 `obsidianmd/prefer-create-el` 禁止 `document.createElement`），
+  样式用 `setCssStyles()`，文本用 `setText()`。
+- **常量集中管理**：字号与缩放步长的上下限、默认值统一放在 `src/constants.ts`，避免 `main.ts` 与 `settings.ts` 循环引用。
 - 国际化系统使用 `I18n.getAvailableLocales()` 动态生成语言下拉菜单，新增语言无需修改 settings.ts

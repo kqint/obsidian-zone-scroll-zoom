@@ -56,6 +56,7 @@ export interface TranslationData {
             name: string;
             desc: string;
             placeholder: string;
+            invalid: string;
         };
         currentZoom: {
             name: string;

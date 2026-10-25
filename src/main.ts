@@ -9,18 +9,19 @@ import {
 } from './types';
 import { I18n } from './i18n';
 import { ZoneScrollZoomSettingTab } from './settings';
+import {
+    DEFAULT_FONT_SIZE,
+    DEFAULT_ZOOM_STEP,
+    MAX_FONT_SIZE,
+    MIN_FONT_SIZE
+} from './constants';
 
 // Default settings
 const DEFAULT_SETTINGS: ZoneScrollZoomSettings = {
-    zoomStep: 0.05,
+    zoomStep: DEFAULT_ZOOM_STEP,
     modifierKey: 'ctrl',
     language: 'auto'
 };
-
-// Base font size limits — Obsidian clamps the value to the same range
-const MIN_FONT_SIZE = 10;
-const MAX_FONT_SIZE = 30;
-const DEFAULT_FONT_SIZE = 16;
 
 /**
  * Zone Scroll Zoom Plugin
@@ -115,27 +116,27 @@ export default class ZoneScrollZoomPlugin extends Plugin {
      */
     showZoomTip(text: string): void {
         if (!this.tipElement) {
-            this.tipElement = activeDocument.createElement('div');
-            this.tipElement.style.cssText = `
-                position: fixed;
-                top: 10%; 
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: rgba(0, 0, 0, 0.75);
-                color: rgba(255, 255, 255, 0.95);
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 16px;
-                font-weight: bold;
-                z-index: 9999;
-                pointer-events: none;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(5px);
-            `;
+            this.tipElement = activeDocument.body.createDiv({ cls: 'zone-scroll-zoom-tip' });
+            this.tipElement.setCssStyles({
+                position: 'fixed',
+                top: '10%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                color: 'rgba(255, 255, 255, 0.95)',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                zIndex: '9999',
+                pointerEvents: 'none',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(5px)'
+            });
             activeDocument.body.appendChild(this.tipElement);
         }
-        this.tipElement.innerText = text;
+        this.tipElement.setText(text);
         
         if (this.hideTimer) {
             window.clearTimeout(this.hideTimer);

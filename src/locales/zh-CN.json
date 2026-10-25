@@ -26,7 +26,8 @@
     "zoomStep": {
       "name": "界面缩放步长 (精度)",
       "desc": "每次滚轮滚动时，界面缩放变化的比例。",
-      "placeholder": "0.05"
+      "placeholder": "0.05",
+      "invalid": "请输入 {min} 到 {max} 之间的数值。"
     },
     "currentZoom": {
       "name": "当前界面缩放比例",

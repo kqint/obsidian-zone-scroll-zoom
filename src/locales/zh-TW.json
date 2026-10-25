@@ -26,7 +26,8 @@
     "zoomStep": {
       "name": "介面縮放步長（精度）",
       "desc": "每次滾輪滾動時，介面縮放變化的比例。",
-      "placeholder": "0.05"
+      "placeholder": "0.05",
+      "invalid": "請輸入 {min} 到 {max} 之間的數值。"
     },
     "currentZoom": {
       "name": "目前介面縮放比例",

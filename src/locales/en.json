@@ -26,7 +26,8 @@
     "zoomStep": {
       "name": "Zoom Step (Precision)",
       "desc": "The ratio of interface zoom change per scroll wheel tick.",
-      "placeholder": "0.05"
+      "placeholder": "0.05",
+      "invalid": "Enter a number between {min} and {max}."
     },
     "currentZoom": {
       "name": "Current Interface Zoom",
