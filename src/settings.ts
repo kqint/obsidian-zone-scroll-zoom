@@ -16,10 +16,9 @@ const RESET_ZOOM_FACTOR = 1.0;
 /**
  * Setting tab for Zone Scroll Zoom plugin.
  *
- * Since Obsidian 1.13.0 settings are described declaratively through
- * `getSettingDefinitions()`, which is what makes them appear in the settings
- * search. `display()` is kept as an imperative fallback for older versions,
- * where the declarative API does not exist yet.
+ * Settings are described declaratively through `getSettingDefinitions()`
+ * (Obsidian 1.13.0+), which is what makes them appear in the settings search.
+ * Values are read and written through `getControlValue()` / `setControlValue()`.
  */
 export class ZoneScrollZoomSettingTab extends PluginSettingTab {
     plugin: ZoneScrollZoomPlugin;
@@ -30,7 +29,7 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
     }
 
     /**
-     * Declarative settings for Obsidian 1.13.0+ (settings search support).
+     * Declarative settings (settings search support).
      */
     getSettingDefinitions(): SettingDefinitionItem[] {
         const i18n = this.plugin.i18n;
@@ -137,78 +136,6 @@ export class ZoneScrollZoomSettingTab extends PluginSettingTab {
             default:
                 return;
         }
-    }
-
-    /**
-     * Imperative fallback for Obsidian versions older than 1.13.0, where the
-     * declarative settings API is not available.
-     */
-    display(): void {
-        const { containerEl } = this;
-        const i18n = this.plugin.i18n;
-        containerEl.empty();
-
-        new Setting(containerEl)
-            .setName(i18n.t('settings.title'))
-            .setHeading();
-
-        // Language setting
-        new Setting(containerEl)
-            .setName(i18n.t('settings.language.name'))
-            .setDesc(i18n.t('settings.language.desc'))
-            .addDropdown(dropdown => {
-                dropdown.addOption('auto', i18n.t('settings.language.options.auto'));
-                for (const locale of I18n.getAvailableLocales()) {
-                    const key = `settings.language.options.${locale.code}`;
-                    const label = i18n.t(key);
-                    dropdown.addOption(locale.code, label === key ? locale.name : label);
-                }
-                return dropdown
-                    .setValue(this.plugin.settings.language)
-                    .onChange((value: string) => {
-                        this.plugin.settings.language = value;
-                        void this.plugin.saveSettings();
-                        this.plugin.i18n.load();
-                        this.display();
-                    });
-            });
-
-        // Modifier key setting
-        new Setting(containerEl)
-            .setName(i18n.t('settings.modifierKey.name'))
-            .setDesc(i18n.t('settings.modifierKey.desc'))
-            .addDropdown(dropdown => dropdown
-                .addOption('ctrl', i18n.t('settings.modifierKey.options.ctrl'))
-                .addOption('shift', i18n.t('settings.modifierKey.options.shift'))
-                .addOption('alt', i18n.t('settings.modifierKey.options.alt'))
-                .addOption('ctrl+shift', i18n.t('settings.modifierKey.options.ctrl+shift'))
-                .addOption('ctrl+alt', i18n.t('settings.modifierKey.options.ctrl+alt'))
-                .addOption('shift+alt', i18n.t('settings.modifierKey.options.shift+alt'))
-                .setValue(this.plugin.settings.modifierKey)
-                .onChange((value: string) => {
-                    this.plugin.settings.modifierKey = value as ModifierKey;
-                    void this.plugin.saveSettings();
-                }));
-
-        // Zoom step setting
-        new Setting(containerEl)
-            .setName(i18n.t('settings.zoomStep.name'))
-            .setDesc(i18n.t('settings.zoomStep.desc'))
-            .addText(text => text
-                .setPlaceholder(i18n.t('settings.zoomStep.placeholder'))
-                .setValue(String(this.plugin.settings.zoomStep))
-                .onChange((value: string) => {
-                    this.plugin.settings.zoomStep = this.parseZoomStep(value);
-                    void this.plugin.saveSettings();
-                }));
-
-        // Current zoom display and reset
-        this.renderZoomReset(new Setting(containerEl)
-            .setName(i18n.t('settings.currentZoom.name')));
-
-        // Current font size display and reset
-        this.renderFontSizeReset(new Setting(containerEl)
-            .setName(i18n.t('settings.currentFontSize.name')));
     }
 
     /**
